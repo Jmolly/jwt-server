@@ -108,7 +108,7 @@ module.exports = {
             res.status(status).send(result);
           });
         } else {
-          status = 401;
+          status = 403;
           result.status = status;
           result.error = `Authentication error`;
           res.status(status).send(result);

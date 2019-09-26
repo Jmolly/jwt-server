@@ -11,8 +11,8 @@ const router = express.Router();
 const environment = process.env.NODE_ENV; // development
 const stage = require('./config')[environment];
 
+const cors = require('cors')
 
-// const cors = require('cors')
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -22,6 +22,19 @@ app.use(bodyParser.urlencoded({
 if (environment !== 'production') {
   app.use(logger('dev'));
 }
+
+app.use(cors({
+  origin: 'http://localhost:3001',
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
+app.all('', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "http://localhost:3001");
+  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  //Auth Each API Request created by user.
+  next();
+});
 
 // app.use('/api/v1', (req, res, next) => {
 //   res.send('Hello');
@@ -35,5 +48,3 @@ app.listen(`${stage.port}`, () => {
 module.exports = app;
 
 app.use('/api/v1', routes(router));
-
-// app.use(cors())
